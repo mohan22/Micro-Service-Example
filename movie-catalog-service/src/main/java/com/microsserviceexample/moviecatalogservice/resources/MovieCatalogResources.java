@@ -27,7 +27,7 @@ public class MovieCatalogResources {
 	@RequestMapping("/{userID}")
 	public List<CatalogItem> getCatalog(@PathVariable("userID") String userID) {
 
-		UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingsdata/users/" + userID,
+		UserRating ratings = restTemplate.getForObject("http://RATINGS-DATA-SERVICE/ratingsdata/users/" + userID,
 				UserRating.class);
 
 		return ratings.getRatings().stream().map(rating -> {
@@ -35,7 +35,8 @@ public class MovieCatalogResources {
 			// webClientBuilder.build().get().uri("http://localhost:8082/movies/" +
 			// rating.getMovieId())
 			// .retrieve().bodyToMono(Movie.class).block(); -> Asynchronous
-			Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class); // Synchronous
+			Movie movie = restTemplate.getForObject("http://MOVIE-INFO-SERVICE/movies/" + rating.getMovieId(),
+					Movie.class); // Synchronous
 			return new CatalogItem(movie.getName(), "Desc", rating.getRating());
 		}).collect(Collectors.toList());
 	}
